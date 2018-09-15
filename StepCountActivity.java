@@ -60,6 +60,9 @@ public class StepCountActivity extends AppCompatActivity implements SensorEventL
         if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR && startCount) {
             ++numSteps;
             counterText.setText("Steps: " + numSteps);
+        } else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+            float pressureValue = event.values[0];
+            float height = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressureValue);
         }
     }
 
