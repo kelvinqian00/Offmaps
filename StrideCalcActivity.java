@@ -1,5 +1,8 @@
 package edu.jhu.kqian2.offmaps;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +28,7 @@ public class StrideCalcActivity extends AppCompatActivity {
     private RadioGroup sexButtons;
     private Button submitButton;
     private TextView strideText;
+    private Button continueButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +43,22 @@ public class StrideCalcActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 StrideCalcActivity.this.calculateStride();
+                StrideCalcActivity.this.saveStride();
+
             }
         });
 
         strideText = findViewById(R.id.stride_text);
         strideText.setVisibility(View.INVISIBLE);
+
+        continueButton = findViewById(R.id.next_button);
+        continueButton.setVisibility(View.INVISIBLE);
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StrideCalcActivity.this.startNewActivity();
+            }
+        });
     }
 
     public void calculateStride() {
@@ -61,5 +76,17 @@ public class StrideCalcActivity extends AppCompatActivity {
 
         strideText.setText(getString(R.string.stride_text, stride));
         strideText.setVisibility(View.VISIBLE);
+        continueButton.setVisibility(View.VISIBLE);
+    }
+
+    private void saveStride() {
+        SharedPreferences.Editor spEdit = this.getPreferences(Context.MODE_PRIVATE).edit();
+        spEdit.putFloat("stride", (float) stride);
+        spEdit.apply();
+    }
+
+    private void startNewActivity() {
+        Intent intent = new Intent(this, CoordinateInput.class);
+        this.startActivity(intent);
     }
 }
